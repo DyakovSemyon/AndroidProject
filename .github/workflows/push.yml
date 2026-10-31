@@ -1,0 +1,135 @@
+name: CI pipeline on push
+
+on: [push]
+
+# Отменяем предыдущий прогон на той же ветке — не жжём минуты.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+# JDK 25 совпадает с toolchainVersion в gradle/gradle-daemon-jvm.properties.
+jobs:
+  # ---------------------------------------------------------------------------
+  # Быстрая проверка главного: секреты из Doppler доезжают до файлов,
+  # а Google Services плагин их принимает. Не зависит от состояния кода.
+  # ---------------------------------------------------------------------------
+  secrets:
+    name: Doppler secrets
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v6
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Install Doppler CLI
+        if: env.DOPPLER_TOKEN != ''
+        uses: dopplerhq/cli-action@v4
+
+      - name: Inject secrets into env
+        if: env.DOPPLER_TOKEN != ''
+        run: |
+          doppler secrets download --no-file --format json --silent \
+            | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> "$GITHUB_ENV"
+
+      - name: No secrets available (fork / local) — skip
+        if: env.DOPPLER_TOKEN == ''
+        run: echo "::warning::DOPPLER_TOKEN недоступен — проверка реальных секретов пропущена"
+
+      - name: Grant execute permission for gradlew
+        if: env.DOPPLER_TOKEN != ''
+        run: chmod +x ./gradlew
+
+      - name: Verify secrets materialize
+        if: env.DOPPLER_TOKEN != ''
+        run: |
+          set -euo pipefail
+          test -n "${GOOGLE_SERVICES_JSON_B64:-}" || { echo "::error::GOOGLE_SERVICES_JSON_B64 не пришёл из Doppler"; exit 1; }
+
+          ./gradlew :app:materializeSecrets --console=plain --no-daemon
+
+          test -f app/google-services.json || { echo "::error::google-services.json не создан"; exit 1; }
+          echo "google-services.json: $(wc -c < app/google-services.json) байт"
+          echo "project_id: $(jq -r '.project_info.project_id' app/google-services.json)"
+          echo "package_name: $(jq -r '.client[0].client_info.android_client_info.package_name' app/google-services.json)"
+
+      - name: Verify Google Services plugin
+        if: env.DOPPLER_TOKEN != ''
+        run: ./gradlew :app:processDebugGoogleServices :app:processReleaseGoogleServices --console=plain --no-daemon
+
+      - name: Secrets are not committed
+        if: env.DOPPLER_TOKEN != ''
+        run: |
+          if git ls-files --error-unmatch app/google-services.json >/dev/null 2>&1; then
+            echo "::error::google-services.json попал в git — так нельзя"
+            exit 1
+          fi
+          echo "ok: файл сгенерирован, но под git не попадает"
+
+  # ---------------------------------------------------------------------------
+  # Полная сборка + unit-тесты + lint. Если DOPPLER_TOKEN нет (форк),
+  # собираем с mock-конфигом, чтобы код всё равно проверялся.
+  # ---------------------------------------------------------------------------
+  build:
+    name: Build & test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v6
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Install Doppler CLI
+        if: env.DOPPLER_TOKEN != ''
+        uses: dopplerhq/cli-action@v4
+
+      - name: Inject secrets into env
+        if: env.DOPPLER_TOKEN != ''
+        run: |
+          doppler secrets download --no-file --format json --silent \
+            | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> "$GITHUB_ENV"
+
+      - name: Use mock Firebase config (no Doppler token)
+        if: env.DOPPLER_TOKEN == ''
+        run: cp .github/mock-google-services.json app/google-services.json
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Build, test and lint
+        run: ./gradlew build :app:assembleDebugAndroidTest --no-daemon --console=plain
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v7
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: ignore
+          retention-days: 7
