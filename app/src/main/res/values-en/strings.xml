@@ -1,0 +1,193 @@
+<resources>
+    <string name="app_name">CoFlow</string>
+        <!-- Заголовки -->
+        <string name="auth_welcome_title">Welcome\nto CoFlow</string>
+        <string name="auth_subtitle_login">Log in</string>
+        <string name="auth_subtitle_register">Sign up</string>
+        <string name="my_tasks_header">My tasks</string>
+        <string name="my_tasks_active">active</string>
+        <string name="my_tasks_completed">completed</string>
+        <string name="create_task_header">Task creation</string>
+        <string name="choose_project_header">Choose project</string>
+        <string name="choose_date_header">Deadline</string>
+        <string name="choose_assignee_header">Add assignee</string>
+        <string name="task_description_header">Task</string>
+        <string name="edit_task_header">Edit task</string>
+
+
+        <!-- Поля ввода -->
+        <string name="auth_label_username">Username</string>
+        <string name="auth_placeholder_username">What should I call you?</string>
+
+        <string name="auth_label_contact">Email</string>
+        <string name="auth_placeholder_contact">name@example.com</string>
+
+        <string name="auth_label_password">Password</string>
+        <string name="auth_placeholder_password">At least 8 characters</string>
+
+        <string name="auth_label_confirm_password">Confirm password</string>
+        <string name="auth_placeholder_confirm_password">Enter password again</string>
+
+        <string name="creation_task_name_label">Name</string>
+        <string name="creation_task_name_placeholder">Enter task name</string>
+
+        <string name="creation_task_description_label">Description</string>
+        <string name="creation_task_description_placeholder">Enter task description</string>
+
+        <string name="creation_task_assignee_label">Assignee</string>
+        <string name="creation_task_assignee_placeholder">Choose assignee</string>
+
+        <string name="creation_task_project_label">Project</string>
+        <string name="creation_task_project_placeholder">Choose project</string>
+
+        <string name="creation_task_deadline_label">Deadline</string>
+        <string name="creation_task_deadline_placeholder">Choose date</string>
+
+        <string name="create_task_choose_project_name">Name of project</string>
+
+        <string name="create_task_choose_assignee_placeholder">Name or email</string>
+
+        <!-- Кнопки -->
+        <string name="auth_button_login">Log in</string>
+        <string name="auth_button_register">Sign up</string>
+
+        <string name="auth_toggle_to_register">Don\'t have an account? Sign up</string>
+        <string name="auth_toggle_to_login">Already have an account? Log in</string>
+
+        <string name="create_task_button">Create task</string>
+
+        <string name="done_button">Done</string>
+
+        <string name="add_assignee_button">Add assignees</string>
+
+        <string name="edit_task_save_button">Save changes</string>
+        <string name="edit_task_delete_button">Delete task</string>
+
+        <!-- Ошибки -->
+        <string name="auth_error_invalid_contact">Check email or phone format</string>
+        <string name="auth_error_short_password">Minimum 8 characters</string>
+        <string name="auth_error_not_equal_password">The passwords do not match.</string>
+        <string name="task_outdated">Expired</string>
+
+        <!-- Группы -->
+    <string name="error_not_authorized">User not logged in</string>
+    <string name="error_load_projects">Error loading projects</string>
+    <string name="error_system">System error: %s</string>
+    <string name="error_task_id_missing">Task ID not provided</string>
+    <string name="error_prefix">Error: %s</string>
+    <string name="tasks_group_planned">For execution</string>
+        <string name="tasks_group_active">In process</string>
+        <string name="tasks_group_completed">Completed</string>
+
+    <string name="tasks_group_overdue">Overdue</string>
+    <string name="tasks_group_upcoming">Upcoming</string>
+    <string name="tasks_group_completed_deadline">Completed</string>
+    <string name="tasks_group_today">Today</string>
+        <string name="tasks_group_this_week">This week</string>
+        <string name="tasks_group_next_week">Next week</string>
+
+        <string name="create_task_projects">Projects</string>
+
+        <string name="create_task_assignee">Assignees</string>
+
+        <!-- Группировка -->
+        <string name="grouping_header">Grouping</string>
+        <string name="grouping_status">According to status</string>
+        <string name="grouping_deadline">By the deadline</string>
+
+        <!-- Фильтры -->
+        <string name="filter_header">Filter</string>
+        <string name="filter_none">No filter</string>
+        <string name="filter_mine">Mine</string>
+
+        <!-- Notifications -->
+        <string name="notification_title">Notifications</string>
+        <string name="notification_message">Notifications interface not implemented yet.</string>
+        <string name="dialog_ok">Got it</string>
+
+        <!-- Строка для подтверждения действия с задачей -->
+        <string name="task_action_confirm_take">Take task?</string>
+        <string name="task_action_confirm_complete">Complete task?</string>
+        <string name="task_action_taken">Task taken successfully</string>
+        <string name="task_action_completed">Task completed successfully</string>
+        <string name="task_action_button_take">Take</string>
+        <string name="task_action_button_complete">Complete</string>
+        <string name="task_action_button_cancel">Cancel</string>
+
+        <!-- Навигация -->
+        <string name="navigation_tasks">My tasks</string>
+        <string name="navigation_projects">Projects</string>
+        <string name="navigation_profile">Profile</string>
+
+        <!-- Экран Проекты -->
+        <string name="projects_header">Projects</string>
+        <string name="project_search_placeholder">Project name</string>
+        <string name="project_status_in_progress">In progress</string>
+        <string name="project_status_archive">Archive</string>
+        <string name="project_filter_title">Filter</string>
+        <string name="project_empty_state">No projects found</string>
+
+        <!-- Фильтры проектов -->
+        <string name="project_filter_all">All</string>
+        <string name="project_filter_management">Management</string>
+        <string name="project_filter_participation">Participation</string>
+        <string name="project_filter_archive">Archive</string>
+
+        <!-- Количество выбранных исполнителей -->
+        <string name="no_assignees_selected">No one is chosen</string>
+
+        <plurals name="selected_assignees_count">
+            <item quantity="one">Selected %d assignee</item>
+            <item quantity="other">Selected %d assignees</item>
+        </plurals>
+
+    <!-- Экран создания проекта -->
+    <string name="create_project_header">Create project</string>
+    <string name="create_project_name_label">Name</string>
+    <string name="create_project_name_placeholder">Project name</string>
+    <string name="create_project_description_label">Description</string>
+    <string name="create_project_description_placeholder">Project description</string>
+    <string name="create_project_participants_label">Participants</string>
+    <string name="create_project_participants_title">Participants</string>
+    <string name="create_project_add_participant">Add participant</string>
+    <string name="create_project_button">Create project</string>
+    <string name="create_project_cancel">Cancel</string>
+    <string name="create_project_remove_participant">Remove participant</string>
+    <string name="create_project_cancel_invite_dialog_title">Cancel invitation</string>
+    <string name="create_project_cancel_invite_dialog_message">Cancel the invitation for %1$s?</string>
+    <string name="create_project_cancel_invite_confirm">Cancel invitation</string>
+    <string name="create_project_unresolved_invites">Project created. Could not invite: %1$s</string>
+
+    <!-- Описание задачи-->
+    <string name="edit_task_saved">Task saved</string>
+    <string name="edit_task_invalid_date">Check the date</string>
+    <string name="edit_task_delete_dialog_title">Delete task</string>
+    <string name="edit_task_delete_dialog_message">Are you sure you want to delete this task?</string>
+    <string name="edit_task_delete_confirm">I am sure</string>
+    <string name="edit_task_delete_cancel">Cancel</string>
+    <string name="description_header">Description</string>
+    <string name="description_placeholder">No description provided</string>
+
+    <string name="author_header">The author of the task</string>
+    <string name="author_placeholder">Unknown</string>
+
+    <string name="assignees_header">Assignees</string>
+    <string name="assignees_placeholder">No assignees</string>
+    <plurals name="task_selected_assignees_count">
+        <item quantity="one">You and %d more assignee</item>
+        <item quantity="other">You and %d more assignees</item>
+    </plurals>
+
+    <string name="task_description_label">Description</string>
+    <string name="task_author_label">Task author</string>
+    <string name="task_status_todo">To be done</string>
+    <string name="task_status_in_progress">In progress</string>
+    <string name="task_status_done">Done</string>
+    <string name="assignee_you">You</string>
+    <string name="deadline_header">Deadline</string>
+
+    <!-- Общие сообщения -->
+    <string name="error_title">Error</string>
+    <string name="ok_button">OK</string>
+    <string name="no_tasks_placeholder">No tasks</string>
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--
+        В debug-сборке Firebase-эмуляторы работают по обычному HTTP.
+        Разрешаем cleartext (незашифрованный HTTP) только в debug-варианте;
+        release-сборка остаётся с настройками платформы по умолчанию
+        (незашифрованный HTTP запрещён).
+    -->
+    <application android:networkSecurityConfig="@xml/network_security_config" />
+</manifest>

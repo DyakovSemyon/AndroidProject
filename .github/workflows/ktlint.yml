@@ -1,0 +1,47 @@
+name: Ktlint on PR
+
+# pull_request_target даёт токен с правом писать в PR, поэтому reviewdog
+# может оставлять комментарии даже для PR из форков. Workflow берётся из
+# базовой ветки, поэтому PR не может его изменить.
+#
+# Здесь выполняется только ktlint (Docker-экшен) над кодом PR: проект не
+# собирается и не запускается. Экшен закреплён по SHA.
+on:
+  pull_request:
+    paths:
+      - '**.kt'
+      - '**.kts'
+      - '.editorconfig'
+      - '.github/workflows/ktlint.yml'
+
+concurrency:
+  group: ktlint-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  ktlint:
+    name: Check Code Quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout PR merge commit
+        uses: actions/checkout@v7
+        with:
+          # Для форков merge-ref лежит в базовом репозитории.
+          ref: refs/pull/${{ github.event.pull_request.number }}/merge
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: ktlint
+        uses: ScaCap/action-ktlint@26c5e9b625966139d9956cbbb6217375480d4e14 # v1.9.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          filter_mode: added
+          ktlint_version: 1.8.0
+          fail_on_error: true
